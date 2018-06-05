@@ -1,4 +1,4 @@
-FROM hidevopsio/s2i-base-alpine
+FROM docker.io/hidevopsio/s2i-base-alpine
 
 # This image provides a Node.JS environment you can use to run your Node.JS
 # applications.
