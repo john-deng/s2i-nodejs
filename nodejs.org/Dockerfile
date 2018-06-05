@@ -19,7 +19,7 @@ ENV NPM_RUN=start \
     DEV_MODE=false \
     YARN_VERSION=1.6.0
 
-LABEL MAINTAINER="John Deng <john.deng@qq.com>" \
+LABEL MAINTAINER="John Deng <john.deng@outlook.com>" \
       io.k8s.description="Platform for building and running Node.js applications" \
       io.k8s.display-name="Node.js v$NODE_VERSION" \
       io.openshift.expose-services="8080:http" \
