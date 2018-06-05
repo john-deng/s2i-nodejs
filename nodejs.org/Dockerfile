@@ -28,8 +28,6 @@ LABEL MAINTAINER="John Deng <john.deng@qq.com>" \
 # Download and install a binary from nodejs.org
 # Add the gpg keys listed at https://github.com/nodejs/node
 RUN set -ex && \
-  apk update && \
-  apk upgrade && \
   TEMP_PKGS="libstdc++ libgcc binutils-gold gnupg linux-headers" && \
   apk add --no-cache --virtual .build-deps $TEMP_PKGS && \
   for key in \
@@ -65,7 +63,14 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" \
   done \
   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fsSLO --compressed
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && apk del .build-deps-yarn
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
